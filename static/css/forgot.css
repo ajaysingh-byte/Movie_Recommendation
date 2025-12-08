@@ -1,0 +1,81 @@
+@import url("base.css");
+
+.forgot-wrapper {
+  max-width: 460px;
+  margin: 80px auto;
+  padding: 0 20px;
+}
+
+.forgot-card {
+  background: rgba(2, 6, 23, 0.9);
+  padding: 26px 24px 22px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.forgot-card h1 {
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.forgot-card .subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 18px;
+}
+
+.field {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.field input {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(30, 41, 59, 0.85);
+  border: none;
+  color: #e5e7eb;
+}
+
+.field input::placeholder {
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.field input:focus {
+  outline: 2px solid #6366f1;
+}
+
+.btn-primary {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.back-link:hover {
+  color: #6366f1;
+}
+
+@media (max-width: 520px) {
+  .forgot-wrapper {
+    margin-top: 60px;
+  }
+
+  .forgot-card {
+    padding: 22px 18px 20px;
+  }
+}

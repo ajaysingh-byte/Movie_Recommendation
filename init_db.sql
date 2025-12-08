@@ -1,0 +1,43 @@
+CREATE DATABASE IF NOT EXISTS movie_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE movie_app;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('user','admin') NOT NULL DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS movies (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  year VARCHAR(10),
+  genre VARCHAR(255),
+  description TEXT,
+  poster_url VARCHAR(1024),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS movie_suggestions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  year VARCHAR(10),
+  genre VARCHAR(255),
+  description TEXT,
+  poster_url VARCHAR(1024),
+  status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  token VARCHAR(255) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  used TINYINT DEFAULT 0,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

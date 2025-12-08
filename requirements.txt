@@ -1,0 +1,7 @@
+Flask==2.3.2
+flask-login==0.6.3
+flask-bcrypt==1.0.1
+mysql-connector-python==8.1.0
+python-dotenv==1.0.0
+scikit-learn
+Flask-Mail==0.9.1

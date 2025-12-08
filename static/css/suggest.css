@@ -1,0 +1,8 @@
+@import url("base.css");
+
+/* Suggest-specific tweaks */
+
+.form-actions {
+  align-self: flex-end;
+  margin-top: 6px;
+}

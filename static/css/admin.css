@@ -1,0 +1,70 @@
+@import url("base.css"); /* if you use imports, or just ensure base.css is loaded in base.html */
+
+/* Admin page styles - concise and consistent with base theme */
+
+/* Card subtitle and small tag */
+.mini-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(99,102,241,0.12);
+  border: 1px solid rgba(99,102,241,0.14);
+  color: #dbeafe;
+  display: inline-block;
+}
+
+.card-subtitle { color: #9ca3af; margin-bottom: 10px; }
+
+/* Form grid for add/edit movie */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.field { display: flex; flex-direction: column; }
+.field label { font-size: 13px; color: #cbd5f5; margin-bottom: 6px; }
+.field input[type="text"],
+.field input[type="number"],
+.field select,
+.field textarea {
+  border-radius: 12px;
+  border: none;
+  padding: 9px 12px;
+  background: rgba(30,41,59,0.85);
+  color: #e5e7eb;
+  font-size: 13px;
+}
+.field textarea { min-height: 90px; }
+
+.form-actions { align-self: end; }
+
+/* Table / suggestions */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(51,65,85,0.6);
+  background: rgba(15,23,42,0.85);
+  margin-top: 10px;
+}
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { padding: 10px 12px; text-align: left; }
+.table thead th { color: #cbd5f5; font-weight: 600; }
+.table tr:nth-child(even) td { background: rgba(15,23,42,0.8); }
+.table tr:hover td { background: rgba(30,64,175,0.06); }
+
+/* Ensure description cells wrap */
+.table td.desc { white-space: normal; word-break: break-word; max-width: 60ch; color: #cbd5f5; }
+
+/* Buttons consistent with base.css */
+.btn-primary { padding: 10px 16px; border-radius: 40px; }
+.btn-ghost { padding: 8px 12px; border-radius: 40px; }
+
+/* Modern list fallback */
+.modern-list.admin-suggestions li { padding: 10px 12px; border-radius: 10px; }
+
+/* Responsive: collapse form grid on small screens */
+@media (max-width: 720px) {
+  .form-grid { grid-template-columns: 1fr; }
+}

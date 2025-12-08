@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Recommend - Similar Movies{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/recommend_content.css') }}?v=1">
+{% endblock %}
+
+{% block content %}
+  <h1>Find movies similar to...</h1>
+  <form method="post" class="recommend-form">
+    <div>
+      <label for="movie">Select a movie</label>
+      <select id="movie" name="movie_id">
+        <option value="">-- choose --</option>
+        {% for m in movies %}
+          <option value="{{ m.id }}" {% if selected and (m.id|string) == (selected|string) %}selected{% endif %}>{{ m.title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <button type="submit" class="btn-primary">Find similar</button>
+    </div>
+  </form>
+
+  <hr>
+
+  {% if recommendations %}
+    <h2>Recommendations</h2>
+    <div class="results-grid">
+      {% for r in recommendations %}
+        <div class="movie-card">
+          {% if r.movie.poster_url %}
+            <img src="{{ r.movie.poster_url }}" alt="{{ r.movie.title }} poster">
+          {% endif %}
+          <div class="info">
+            <h3>{{ r.movie.title }}</h3>
+            <p><small>Score: {{ '%.3f'|format(r.score) }}</small></p>
+            <p>{{ r.movie.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

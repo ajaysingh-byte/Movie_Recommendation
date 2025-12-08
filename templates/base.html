@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Movie App{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=2">
+  <style>
+    /* Base inline styles for layout and components (does not change HTML structure) */
+    :root{
+      --bg: #0f172a;
+      --card: rgba(2,6,23,0.9);
+      --muted: #9ca3af;
+      --accent: #6366f1;
+      --accent-2: #4f46e5;
+      --glass: rgba(30,41,59,0.6);
+    }
+
+    html,body{height:100%;}
+    body{margin:0;background:linear-gradient(135deg,var(--bg),#0b1220);color:#e5e7eb;font-family:Inter, Poppins, system-ui, -apple-system, sans-serif;}
+
+    /* Navbar */
+    .navbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:transparent;border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter: blur(6px);}    
+    .logo{font-weight:700;color:var(--accent);letter-spacing:0.3px}
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .nav-right a{color:#cbd5f5;padding:6px 10px;border-radius:8px;transition:background .16s,color .16s}
+    .nav-right a:hover{background:var(--glass);color:#fff}
+    .nav-user{font-size:13px;color:var(--muted);margin-right:8px}
+
+    /* container & page wrapper */
+    .container{max-width:1100px;margin:40px auto;padding:0 18px}
+    .page-wrapper{max-width:1100px;margin:40px auto;padding:0 20px 40px}
+
+    /* Flash messages */
+    .flash-container{position:fixed;top:72px;right:20px;z-index:60;display:flex;flex-direction:column;gap:8px}
+    .flash{padding:10px 14px;border-radius:10px;box-shadow:0 8px 26px rgba(2,6,23,0.6);font-size:13px}
+    .flash-success{background:linear-gradient(90deg,#16a34a,#34d399);color:#04270b}
+    .flash-error{background:linear-gradient(90deg,#ef4444,#fb7185);color:#2b0202}
+    .flash-info{background:linear-gradient(90deg,#60a5fa,#3b82f6);color:#041633}
+
+    /* Card default (keeps consistent look) */
+    .card{background:var(--card);padding:18px;border-radius:14px;border:1px solid rgba(148,163,184,0.06);box-shadow:0 10px 30px rgba(2,6,23,0.6);}
+    .card-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .card-subtitle{color:var(--muted);font-size:13px;margin-bottom:12px}
+
+    /* Buttons / pills */
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none;padding:10px 16px;border-radius:999px;cursor:pointer}
+    .btn-ghost{background:transparent;border:1px solid rgba(148,163,184,0.08);color:#cbd5f5;padding:8px 12px;border-radius:999px;cursor:pointer}
+    .btn-link{background:transparent;border:none;color:#cbd5f5;cursor:pointer}
+
+    /* Table wrapper small niceties */
+    .table-wrapper{overflow:hidden;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:10px 12px;text-align:left}
+    .table thead th{color:#cbd5f5}
+
+    /* Responsive tweaks */
+    @media (max-width:720px){
+      .nav-right{gap:8px}
+      .container{padding:0 12px}
+      .flash-container{right:12px;left:12px}
+    }
+  </style>
+  {% block styles %}{% endblock %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-left">
+    <span class="logo">MovieApp</span>
+  </div>
+  <nav class="nav-right">
+    {% if current_user.is_authenticated %}
+      <span class="nav-user">Hi, {{ current_user.username }}</span>
+      <a href="{{ url_for('search_page') }}">Search</a>
+      <a href="{{ url_for('suggest_page') }}">Suggest</a>
+      <a href="{{ url_for('recommend_genre_tmdb') }}">Recommend</a>
+      <a href="{{ url_for('recommend_content') }}">More like this</a>
+      <a href="{{ url_for('my_suggestions') }}">My Suggestions</a>
+      {% if current_user.is_admin() %}
+        <a href="{{ url_for('admin_panel') }}">Admin</a>
+      {% endif %}
+      <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
+        <button type="submit" class="btn-link">Logout</button>
+      </form>
+    {% endif %}
+  </nav>
+</header>
+
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, msg in messages %}
+          <div class="flash flash-{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

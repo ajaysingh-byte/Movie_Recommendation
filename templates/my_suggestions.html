@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My Suggestions | Movie Recommendation System{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-header">
+    <div class="page-header-main">
+      <h1>My Suggestions</h1>
+      <p>All movies you’ve suggested so far.</p>
+    </div>
+    <span class="page-tag">My Suggestions</span>
+  </header>
+
+  <section class="card">
+    <div class="card-title-row">
+      <h2>Suggestions</h2>
+    </div>
+
+    {% if suggestions %}
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Year</th>
+              <th>Genre</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in suggestions %}
+              <tr>
+                <td>{{ s.title }}</td>
+                <td>{{ s.year }}</td>
+                <td>{{ s.genre }}</td>
+                <td class="desc">{{ s.description }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="card-subtitle">You haven’t suggested any movies yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

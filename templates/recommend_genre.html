@@ -1,0 +1,36 @@
+{# recommend_genre.html #}
+{% extends "base.html" %}
+{% block title %}Recommend by Genre{% endblock %}
+{% block content %}
+  <h1>Recommend Movies by Genre</h1>
+  <form method="post">
+    <label for="genre">Genre</label>
+    <select id="genre" name="genre">
+      <option value="">-- choose --</option>
+      {% for g in genres %}
+        <option value="{{ g.id }}" {% if selected_genre_id and (g.id|string) == (selected_genre_id|string) %}selected{% endif %}>{{ g.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Recommend</button>
+  </form>
+
+  <hr>
+
+  {% if results %}
+    <h2>Results</h2>
+    <div class="results-grid">
+      {% for m in results %}
+        <div class="movie-card">
+          {% if m.poster_path %}
+            <img src="https://image.tmdb.org/t/p/w154{{ m.poster_path }}" alt="{{ m.title }} poster">
+          {% endif %}
+          <div class="info">
+            <h3>{{ m.title }}</h3>
+            <p><small>{{ m.release_date }} — Rating: {{ m.vote_average }}</small></p>
+            <p>{{ m.overview }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

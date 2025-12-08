@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel | Movie Recommendation System{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+  <header class="page-header">
+    <div class="page-header-main">
+      <h1>Admin Dashboard</h1>
+      <p>Manage movies, review suggestions and keep the catalogue clean.</p>
+    </div>
+    <span class="page-tag">Admin Area</span>
+  </header>
+
+  <!-- Card: Manage Users -->
+  <section class="card" id="manage-users-card">
+    <div class="card-title-row">
+      <h2>Manage Users</h2>
+      <button type="button" id="refreshUsers" class="btn-ghost">Refresh</button>
+    </div>
+    <p class="card-subtitle">View and delete user accounts (admins cannot delete themselves).</p>
+
+    <div class="table-wrapper">
+      <table class="table" id="usersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading users...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Card: Suggestions / Pending Items -->
+  <section class="card">
+    <div class="card-title-row">
+      <h2>User Suggestions</h2>
+      <span class="mini-tag">Pending review</span>
+    </div>
+    <p class="card-subtitle">
+      Approve or reject movies suggested by users.
+    </p>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Genre</th>
+            <th>Description</th>
+            <th>Suggested by</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if suggestions %}
+            {% for s in suggestions %}
+              <tr id="suggestion-{{ s.id }}">
+                <td>{{ s.title }}</td>
+                <td>{{ s.year }}</td>
+                <td>{{ s.genre }}</td>
+                <td class="desc">{{ s.description }}</td>
+                <td>{{ s.suggested_by }}</td>
+                <td>{{ s.status }}</td>
+                <td>
+                  <button class="btn-primary" data-action="approve" data-id="{{ s.id }}">Approve</button>
+                  <button class="btn-ghost" data-action="reject" data-id="{{ s.id }}">Reject</button>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="7">No suggestions found.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  async function adminAction(url, method='POST'){
+    const resp = await fetch(url, { method });
+    if (!resp.ok){
+      const j = await resp.json().catch(()=>null);
+      throw new Error(j?.error || resp.statusText);
+    }
+    return resp.json().catch(()=>null);
+  }
+
+  document.addEventListener('click', async function(e){
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const action = btn.getAttribute('data-action');
+    const id = btn.getAttribute('data-id');
+    if (!id) return;
+
+    if (action === 'approve' && !confirm('Approve this suggestion?')) return;
+    if (action === 'reject' && !confirm('Reject this suggestion?')) return;
+    if (action === 'delete' && !confirm('Delete this suggestion permanently?')) return;
+
+    try {
+      let url = `/api/admin/suggestions/${id}`;
+      let method = 'POST';
+      if (action === 'approve') url += '/approve';
+      else if (action === 'reject') url += '/reject';
+      else if (action === 'delete') method = 'DELETE';
+
+      await adminAction(url, method);
+      document.getElementById('suggestion-' + id)?.remove();
+      alert(action.charAt(0).toUpperCase() + action.slice(1) + 'd');
+    } catch (err) {
+      alert('Failed: ' + (err.message || err));
+    }
+  });
+
+  // Users management: fetch and render
+  async function loadUsers(){
+    const tbody = document.querySelector('#usersTable tbody');
+    tbody.innerHTML = '<tr><td colspan="6">Loading users...</td></tr>';
+    try {
+      const resp = await fetch('/api/admin/users');
+      if (!resp.ok) throw new Error('Failed to load users');
+      const users = await resp.json();
+      if (!users || users.length === 0){
+        tbody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = '';
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.id = 'user-' + u.id;
+        tr.innerHTML = `
+          <td>${u.id}</td>
+          <td>${u.username}</td>
+          <td>${u.email}</td>
+          <td>${u.role}</td>
+          <td>${u.created_at || ''}</td>
+          <td>
+            <button class="btn-ghost" data-action="delete-user" data-id="${u.id}">Delete</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    } catch (err){
+      tbody.innerHTML = '<tr><td colspan="6">Error loading users.</td></tr>';
+      console.error(err);
+    }
+  }
+
+  // delegated handler for deleting user and existing suggestion actions
+  document.addEventListener('click', async function(e){
+    // user deletion
+    const userBtn = e.target.closest('button[data-action="delete-user"]');
+    if (userBtn){
+      const id = userBtn.getAttribute('data-id');
+      if (!id) return;
+      if (!confirm('Delete user ID ' + id + '? This is irreversible.')) return;
+      try {
+        const resp = await fetch('/api/admin/users/' + id, { method: 'DELETE' });
+        if (!resp.ok){
+          const j = await resp.json().catch(()=>null);
+          alert('Failed to delete user: ' + (j?.error || resp.statusText));
+          return;
+        }
+        document.getElementById('user-' + id)?.remove();
+        alert('User deleted');
+      } catch (err){
+        alert('Error deleting user');
+      }
+      return;
+    }
+
+    // suggestion action buttons are handled by the existing delegated handler inserted earlier
+  });
+
+  document.getElementById('refreshUsers').addEventListener('click', loadUsers);
+  // load on page ready
+  window.addEventListener('DOMContentLoaded', loadUsers);
+</script>
+
+{% endblock %}

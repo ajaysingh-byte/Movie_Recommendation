@@ -1,0 +1,152 @@
+/* Styles for Recommend - Similar Movies page
+   Keep design consistent with site (dark cards, pill buttons, rounded inputs)
+*/
+
+/* Form */
+.recommend-form {
+  max-width: 720px;
+  margin: 18px 0 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.recommend-form label {
+  display: block;
+  font-size: 13px;
+  color: #cbd5f5;
+  margin-bottom: 6px;
+}
+
+.recommend-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 10px 14px;
+  border-radius: 40px;
+  background: rgba(30,41,59,0.85);
+  color: #e5e7eb;
+  border: none;
+  font-size: 14px;
+  min-width: 220px;
+}
+
+.recommend-form button,
+.recommend-form .btn-primary {
+  padding: 10px 18px;
+  border-radius: 40px;
+  background: linear-gradient(135deg,#6366f1,#4f46e5);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.recommend-form button:hover, .recommend-form .btn-primary:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(99,102,241,0.7);
+}
+
+/* Results grid */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+  margin-top: 14px;
+}
+
+/* Movie card: polished dark card with left poster and right info */
+.movie-card {
+  background: rgba(2, 6, 23, 0.9);
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  overflow: hidden;
+}
+
+.movie-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.75);
+}
+
+/* Poster (either top-level img or .poster img) */
+.movie-card > img,
+.movie-card .poster img {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: block;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+.movie-card .poster {
+  flex: 0 0 120px;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+}
+
+.movie-card .info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0; /* allow text truncation inside flex */
+}
+
+.movie-card h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #e5e7eb;
+  line-height: 1.15;
+}
+
+.movie-card small {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.movie-card p {
+  margin: 0;
+  color: #cbd5f5;
+  font-size: 13px;
+  line-height: 1.4;
+  /* clamp description to 5 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Action area if present */
+.movie-card .card-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 720px) {
+  .movie-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+  }
+  .movie-card > img,
+  .movie-card .poster img {
+    width: 100%;
+    height: 220px;
+    border-radius: 12px;
+  }
+  .movie-card .card-actions { margin-left: 0; justify-content: flex-end; }
+}

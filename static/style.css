@@ -1,0 +1,110 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f4f4;
+}
+
+.navbar {
+  background: #222;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar a, .btn-link {
+  color: #fff;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.container {
+  padding: 1.5rem;
+}
+
+.card {
+  background: #fff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+
+.auth-wrapper {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.auth-wrapper .card {
+  flex: 1 1 250px;
+}
+
+input, textarea, button {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.7rem;
+  padding: 0.4rem;
+}
+
+button, .btn, .btn-sm {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-sm {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.search-page .search-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.movie-card {
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.movie-card img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.flash-container {
+  margin-bottom: 1rem;
+}
+
+.flash {
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.3rem;
+}
+
+.flash-success { background: #d4edda; }
+.flash-error   { background: #f8d7da; }

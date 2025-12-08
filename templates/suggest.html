@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Suggest a Movie{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/suggest.css') }}">
+<style>
+  /* Suggest page inline styles - compact and consistent with base theme */
+  h1 { text-align: center; margin-top: 6px; margin-bottom: 12px; }
+
+  .card { max-width: 780px; margin: 10px auto; padding: 18px; border-radius: 12px; }
+  .card form { display: grid; gap: 10px; }
+
+  .card label { display: block; font-size: 13px; color: #cbd5f5; margin-bottom: 6px; }
+  .card input[type="text"],
+  .card textarea { width: 100%; padding: 9px 12px; border-radius: 10px; border: none; background: rgba(30,41,59,0.85); color: #e5e7eb; font-size: 14px; }
+  .card textarea { min-height: 100px; resize: vertical; }
+
+  .card input[type="text"]::placeholder,
+  .card textarea::placeholder { color: #94a3b8; }
+
+  .card button[type="submit"] {
+    margin-top: 6px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(90deg,#06b6d4,#3b82f6);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    justify-self: start;
+  }
+
+  .card button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.12); }
+
+  /* small helper link under form */
+  p + a { color: #a5b4fc; }
+
+  /* Responsive: reduce padding on small screens */
+  @media (max-width: 520px) {
+    .card { padding: 14px; margin: 8px; }
+    .card input[type="text"], .card textarea { font-size: 13px; }
+    .card button[type="submit"] { width: 100%; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Suggest a Movie</h1>
+
+<div class="card">
+  <form action="{{ url_for('suggest_movie') }}" method="post">
+    <label>Title *</label>
+    <input type="text" name="title" required>
+
+    <label>Year</label>
+    <input type="text" name="year" placeholder="e.g. 2023">
+
+    <label>Genre</label>
+    <input type="text" name="genre" placeholder="Action, Drama, ...">
+
+    <label>Description</label>
+    <textarea name="description" rows="3"></textarea>
+
+    <label>Poster URL (optional)</label>
+    <input type="text" name="poster_url" placeholder="https://...">
+
+    <button type="submit">Submit Suggestion</button>
+  </form>
+</div>
+
+<p style="margin-top: 1rem;">
+  <a href="{{ url_for('my_suggestions') }}">View my suggestions</a>
+</p>
+{% endblock %}

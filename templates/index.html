@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Login | Movie Recommendation System{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+  <!-- Header Section -->
+  <header class="auth-header">
+    <div class="auth-header-main">
+      <span class="brand-badge">Movie Recommendation System</span>
+      <h1>Welcome Back</h1>
+      <p>Login to continue or create a new account in seconds.</p>
+    </div>
+    <span class="secure-pill">🔒 Secure &amp; Encrypted</span>
+  </header>
+
+  <!-- LOGIN CARD -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Login</h2>
+        <p class="card-subtitle">Access your personalized recommendations.</p>
+      </div>
+      <span class="tag">Existing User</span>
+    </div>
+
+    <form action="{{ url_for('login') }}" method="post">
+
+      <!-- This matches: username_or_email = request.form.get("usernameOrEmail") -->
+      <div class="field">
+        <label for="login-identifier">Username or Email</label>
+        <input
+          type="text"
+          id="login-identifier"
+          name="usernameOrEmail"
+          placeholder="Enter your username or email"
+          required
+        >
+      </div>
+
+      <!-- This matches: password = request.form.get("password") -->
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input
+          type="password"
+          id="login-password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        >
+      </div>
+
+      <div class="form-footer">
+        <!-- change this route name if your forgot route is different -->
+        <a href="{{ url_for('forgot_password') }}" class="forgot">
+          Forgot password?
+        </a>
+        <button type="submit" class="btn-primary">
+          Login
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- REGISTRATION CARD -->
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Register</h2>
+        <p class="card-subtitle">Create an account to start getting movie suggestions.</p>
+      </div>
+      <span class="tag">New User</span>
+    </div>
+
+    <form action="{{ url_for('register') }}" method="post">
+
+      <div class="field">
+        <label for="register-username">Username</label>
+        <input
+          type="text"
+          id="register-username"
+          name="username"
+          placeholder="Choose a username"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="register-email">Email</label>
+        <input
+          type="email"
+          id="register-email"
+          name="email"
+          placeholder="you@example.com"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="register-password">Password</label>
+        <input
+          type="password"
+          id="register-password"
+          name="password"
+          placeholder="Create a strong password"
+          required
+        >
+      </div>
+
+      <button type="submit" class="btn-primary">
+        Register
+      </button>
+    </form>
+  </section>
+
+</div>
+
+{% endblock %}

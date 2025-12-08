@@ -1,0 +1,128 @@
+<!-- templates/dashboard.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page">
+    <h1>User Dashboard</h1>
+    <p>Hello, {{ user.username }} (role: {{ user.role }})</p>
+
+    <!-- Search bar with autocomplete suggestions -->
+    <div class="search-wrap">
+      <input id="searchInput" placeholder="Search movies by title or genre..." autocomplete="off" />
+      <ul id="suggestions" class="suggestions" hidden></ul>
+    </div>
+
+    <form action="{{ url_for('logout') }}" method="post" onsubmit="return confirm('Logout?');">
+      <button type="submit">Logout</button>
+    </form>
+
+    <hr/>
+
+    <h2>Suggest a movie</h2>
+    <form action="{{ url_for('suggest_movie') }}" method="post" id="suggestForm">
+      <input name="title" placeholder="Movie title" required />
+      <input name="year" placeholder="Year (optional)" />
+      <input name="genre" placeholder="Genre (optional)" />
+      <input name="poster_url" placeholder="Poster URL (optional)" />
+      <textarea name="description" placeholder="Short description (optional)"></textarea>
+      <button type="submit">Submit suggestion</button>
+    </form>
+
+    <p style="margin-top:12px;color:#666">After review, admin may approve the suggestion to add it to the official movie list.</p>
+  </div>
+
+  <script>
+    // Simple debounce helper
+    function debounce(fn, delay){
+      let t;
+      return function(...args){
+        clearTimeout(t);
+        t = setTimeout(()=>fn.apply(this, args), delay);
+      }
+    }
+
+    const input = document.getElementById('searchInput');
+    const suggestionsEl = document.getElementById('suggestions');
+
+    function renderSuggestions(items){
+      suggestionsEl.innerHTML = '';
+      if(!items || items.length === 0){
+        suggestionsEl.hidden = true;
+        return;
+      }
+      items.forEach(item=>{
+        const li = document.createElement('li');
+        li.className = 'suggestion-item';
+        li.tabIndex = 0;
+        li.innerHTML = `<strong>${escapeHtml(item.title)}</strong> <span class="muted">(${item.year || ''})</span><div class="small muted">${item.genre || ''}</div>`;
+        li.addEventListener('click', ()=> selectSuggestion(item));
+        li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') selectSuggestion(item); });
+        suggestionsEl.appendChild(li);
+      });
+      suggestionsEl.hidden = false;
+    }
+
+    function selectSuggestion(item){
+      input.value = item.title;
+      suggestionsEl.hidden = true;
+    }
+
+    function escapeHtml(str){
+      if(!str) return '';
+      return str.replace(/[&<>"']/g, function(s){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s]; });
+    }
+
+    async function fetchSuggestions(q){
+      if(!q) return renderSuggestions([]);
+      try{
+        const res = await fetch(`/api/movies/search?q=${encodeURIComponent(q)}`);
+        if(!res.ok) return renderSuggestions([]);
+        const data = await res.json();
+        renderSuggestions(data);
+      }catch(e){
+        console.error('Suggestion fetch failed', e);
+        renderSuggestions([]);
+      }
+    }
+
+    const debouncedFetch = debounce((e)=> fetchSuggestions(e.target.value.trim()), 250);
+    input.addEventListener('input', debouncedFetch);
+
+    // hide suggestions when clicking outside
+    document.addEventListener('click', (e)=>{
+      if(!document.querySelector('.search-wrap').contains(e.target)){
+        suggestionsEl.hidden = true;
+      }
+    });
+  </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.location.hash === '#suggestion-success'){
+    // create a small banner
+    const b = document.createElement('div');
+    b.textContent = 'Suggestion submitted — thank you! Admin will review it.';
+    b.style.position = 'fixed';
+    b.style.top = '16px';
+    b.style.right = '16px';
+    b.style.background = 'linear-gradient(90deg,#6ee7b7,#60a5fa)';
+    b.style.color = '#042';
+    b.style.padding = '10px 14px';
+    b.style.borderRadius = '10px';
+    b.style.boxShadow = '0 6px 18px rgba(2,6,23,0.12)';
+    b.style.zIndex = 9999;
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(), 4500);
+    // remove hash to avoid showing again on refresh
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+});
+</script>
+
+</body>
+</html>

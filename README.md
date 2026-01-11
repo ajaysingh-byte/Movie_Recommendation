@@ -63,12 +63,12 @@ movie_app/
 
 Create a `.env` file in the root directory and add:
 
-FLASK_SECRET_KEY=your_secret_key
-TMDB_API_KEY=your_tmdb_api_key
-DB_HOST=localhost
-DB_USER=your_mysql_username
-DB_PASSWORD=your_mysql_password
-DB_NAME=movie_db
+- FLASK_SECRET_KEY=your_secret_key
+- TMDB_API_KEY=your_tmdb_api_key
+- DB_HOST=localhost
+- DB_USER=your_mysql_username
+- DB_PASSWORD=your_mysql_password
+- DB_NAME=movie_db
 
 
 ---

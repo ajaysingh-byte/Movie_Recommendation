@@ -83,8 +83,8 @@ DB_NAME=movie_db
 ### 2️⃣ Create a Virtual Environment (Optional but Recommended)
 
 - python -m venv venv
-- source venv/bin/activate   # For Linux/Mac
-- venv\Scripts\activate      # For Windows
+- source venv/bin/activate   *# For Linux/Mac*
+- venv\Scripts\activate      *# For Windows*
 
 ### 3️⃣ Install Dependencies
 
